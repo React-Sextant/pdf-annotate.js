@@ -64,6 +64,8 @@ export function renderPage(pageNumber, renderOptions) {
     let viewport = pdfPage.getViewport(scale, rotate);
     let transform = scalePage(pageNumber, viewport, canvasContext);
 
+    page.setAttribute('data-loaded', 'true');
+
     // Render the page
     return Promise.all([
       pdfPage.render({ canvasContext, viewport, transform }),
@@ -71,31 +73,31 @@ export function renderPage(pageNumber, renderOptions) {
     ]).then(() => {
       // Text content is needed for a11y, but is also necessary for creating
       // highlight and strikeout annotations which require selecting text.
-      return pdfPage.getTextContent({normalizeWhitespace: true}).then((textContent) => {
-        return new Promise((resolve, reject) => {
-          // Render text layer for a11y of text content
-          let textLayer = page.querySelector(`.textLayer`);
-          let textLayerFactory = new PDFJS.DefaultTextLayerFactory();
-          let textLayerBuilder = textLayerFactory.createTextLayerBuilder(textLayer, pageNumber -1, viewport);
-          textLayerBuilder.setTextContent(textContent);
-          textLayerBuilder.render();
-
-          // Enable a11y for annotations
-          // Timeout is needed to wait for `textLayerBuilder.render`
-          setTimeout(() => {
-            try {
-              renderScreenReaderHints(annotations.annotations);
-              resolve();
-            } catch (e) {
-              reject(e);
-            }
-          });
-        });
-      });
-    }).then(() => {
+    //   return pdfPage.getTextContent({normalizeWhitespace: true}).then((textContent) => {
+    //     return new Promise((resolve, reject) => {
+    //       // Render text layer for a11y of text content
+    //       let textLayer = page.querySelector(`.textLayer`);
+    //       let textLayerFactory = new pdfjsLib.DefaultTextLayerFactory();
+    //       let textLayerBuilder = textLayerFactory.createTextLayerBuilder(textLayer, pageNumber -1, viewport);
+    //       textLayerBuilder.setTextContent(textContent);
+    //       textLayerBuilder.render();
+    //
+    //       // Enable a11y for annotations
+    //       // Timeout is needed to wait for `textLayerBuilder.render`
+    //       setTimeout(() => {
+    //         try {
+    //           renderScreenReaderHints(annotations.annotations);
+    //           resolve();
+    //         } catch (e) {
+    //           reject(e);
+    //         }
+    //       });
+    //     });
+    //   });
+    // }).then(() => {
       // Indicate that the page was loaded
-      page.setAttribute('data-loaded', 'true');
-
+      // page.setAttribute('data-loaded', 'true');
+      renderScreenReaderHints(annotations.annotations);
       return [pdfPage, annotations];
     });
   });
