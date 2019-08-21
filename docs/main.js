@@ -42,6 +42,21 @@ function render() {
     UI.renderPage(1, RENDER_OPTIONS).then(([pdfPage, annotations]) => {
       let viewport = pdfPage.getViewport(RENDER_OPTIONS.scale, RENDER_OPTIONS.rotate);
       PAGE_HEIGHT = viewport.height;
+
+      new Swiper ('.swiper-container', {
+        touchMoveStopPropagation : false,
+        on:{
+          slideChange: function(){
+            let visiblePageNum = this.activeIndex+1;
+            let visiblePage = document.querySelector(`.page[data-page-number="${visiblePageNum}"][data-loaded="false"]`);
+            if (visiblePage) {
+              setTimeout(function () {
+                UI.renderPage(visiblePageNum, RENDER_OPTIONS)
+              });
+            }
+          },
+        },
+      })
     });
   });
 }

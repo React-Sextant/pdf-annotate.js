@@ -142,7 +142,8 @@ export function enablePen() {
   if (_enabled) { return; }
 
   _enabled = true;
-  viewer.addEventListener('touchstart', handleDocumentMousedown);
+  document.getElementById("content-wrapper").classList.add('swiper-no-swiping');
+  document.getElementById("viewer").addEventListener('touchstart', handleDocumentMousedown);
   document.addEventListener('mousedown', handleDocumentMousedown);
   document.addEventListener('keyup', handleDocumentKeyup);
   disableUserSelect();
@@ -156,6 +157,7 @@ export function disablePen() {
 
   _enabled = false;
 
+  document.getElementById("content-wrapper").classList.remove('swiper-no-swiping');
   viewer.removeEventListener('touchstart', handleDocumentMousedown);
   document.removeEventListener('mousedown', handleDocumentMousedown);
   document.removeEventListener('keyup', handleDocumentKeyup);
