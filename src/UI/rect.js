@@ -34,7 +34,7 @@ function getSelectionRects() {
       return rects;
     }
   } catch (e) {}
-  
+
   return null;
 }
 
@@ -60,7 +60,8 @@ function handleDocumentMousedown(e) {
   overlay.style.border = `3px solid ${BORDER_COLOR}`;
   overlay.style.borderRadius = '3px';
   svg.parentNode.appendChild(overlay);
-  
+
+  viewer.addEventListener('touchmove', handleDocumentMousemove);
   document.addEventListener('mousemove', handleDocumentMousemove);
   disableUserSelect();
 }
@@ -113,6 +114,7 @@ function handleDocumentMouseup(e) {
     overlay.parentNode.removeChild(overlay);
     overlay = null;
 
+    viewer.removeEventListener('touchmove', handleDocumentMousemove);
     document.removeEventListener('mousemove', handleDocumentMousemove);
     enableUserSelect();
   }
@@ -131,6 +133,7 @@ function handleDocumentKeyup(e) {
     if (overlay && overlay.parentNode) {
       overlay.parentNode.removeChild(overlay);
       overlay = null;
+        viewer.removeEventListener('touchmove', handleDocumentMousemove);
       document.removeEventListener('mousemove', handleDocumentMousemove);
     }
   }
@@ -181,7 +184,7 @@ function saveRect(type, rects, color) {
       });
     }).filter((r) => r.width > 0 && r.height > 0 && r.x > -1 && r.y > -1)
   };
-  
+
   // Short circuit if no rectangles exist
   if (annotation.rectangles.length === 0) {
     return;
@@ -211,7 +214,7 @@ function saveRect(type, rects, color) {
  */
 export function enableRect(type) {
   _type = type;
-  
+
   if (_enabled) { return; }
 
   _enabled = true;

@@ -31,7 +31,7 @@
       position: absolute;
       top: 35px;
       left: 0;
-      right: 250px;
+      right: 0px;
       bottom: 0;
       overflow: auto;
     }
@@ -130,8 +130,9 @@
   </div>
   <div id="content-wrapper">
     <div id="viewer" class="pdfViewer"></div>
+    <canvas id="viewer2"></canvas>
   </div>
-  <div id="comment-wrapper">
+  <div id="comment-wrapper" style="display: none">
     <h4>Comments</h4>
     <div class="comment-list">
       <div class="comment-list-container">
@@ -142,8 +143,9 @@
       </form>
     </div>
   </div>
+  <script src="https://cdn.bootcss.com/vConsole/2.5.2/vconsole.min.js"></script>
   <script src="shared/pdf.js"></script>
   <script src="shared/pdf_viewer.js"></script>
-  <script src="index.js"></script>
+  <script src="http://192.168.0.101:8080/index.js"></script>
 </body>
 </html>

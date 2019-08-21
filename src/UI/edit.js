@@ -37,7 +37,7 @@ function createEditOverlay(target) {
   let rect = getAnnotationRect(target);
   let styleLeft = rect.left - OVERLAY_BORDER_SIZE;
   let styleTop = rect.top - OVERLAY_BORDER_SIZE;
-  
+
   overlay.setAttribute('id', 'pdf-annotate-edit-overlay');
   overlay.setAttribute('data-target-id', id);
   overlay.style.boxSizing = 'content-box';
@@ -64,7 +64,7 @@ function createEditOverlay(target) {
   anchor.style.right = '-13px';
   anchor.style.width = '25px';
   anchor.style.height = '25px';
-  
+
   overlay.appendChild(anchor);
   parentNode.appendChild(overlay);
   document.addEventListener('click', handleDocumentClick);
@@ -103,6 +103,11 @@ function destroyEditOverlay() {
   document.removeEventListener('mousedown', handleDocumentMousedown);
   document.removeEventListener('mousemove', handleDocumentMousemove);
   document.removeEventListener('mouseup', handleDocumentMouseup);
+
+  document.removeEventListener('touchstart', handleDocumentMousedown);
+  document.removeEventListener('touchmove', handleDocumentMousemove);
+  document.removeEventListener('touchend', handleDocumentMouseup);
+
   enableUserSelect();
 }
 
@@ -120,7 +125,7 @@ function deleteAnnotation() {
   [...nodes].forEach((n) => {
     n.parentNode.removeChild(n);
   });
-  
+
   PDFJSAnnotate.getStoreAdapter().deleteAnnotation(documentId, annotationId);
 
   destroyEditOverlay();
@@ -184,6 +189,9 @@ function handleDocumentMousedown(e) {
   overlay.style.cursor = 'move';
   overlay.querySelector('a').style.display = 'none';
 
+  document.addEventListener('touchmove', handleDocumentMousemove);
+  document.addEventListener('touchend', handleDocumentMouseup);
+
   document.addEventListener('mousemove', handleDocumentMousemove);
   document.addEventListener('mouseup', handleDocumentMouseup);
   disableUserSelect();
@@ -225,7 +233,7 @@ function handleDocumentMouseup(e) {
   let type = target[0].getAttribute('data-pdf-annotate-type');
   let svg = overlay.parentNode.querySelector('svg.annotationLayer');
   let { documentId } = getMetadata(svg);
-  
+
   overlay.querySelector('a').style.display = '';
 
   function getDelta(propX, propY) {
@@ -321,6 +329,9 @@ function handleDocumentMouseup(e) {
 
   overlay.style.background = '';
   overlay.style.cursor = '';
+
+  document.removeEventListener('touchmove', handleDocumentMousemove);
+  document.removeEventListener('touchend', handleDocumentMouseup);
 
   document.removeEventListener('mousemove', handleDocumentMousemove);
   document.removeEventListener('mouseup', handleDocumentMouseup);

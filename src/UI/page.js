@@ -171,10 +171,10 @@ function approximateFraction(x) {
   }
 
   const x_ = x > 1 ? xinv : x;
-  
+
   // a/b and c/d are neighbours in Farey sequence.
   let a = 0, b = 1, c = 1, d = 1;
-  
+
   // Limit search to order 8.
   while (true) {
     // Generating next term in sequence (order of q).

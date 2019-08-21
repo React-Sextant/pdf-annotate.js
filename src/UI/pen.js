@@ -21,6 +21,9 @@ function handleDocumentMousedown() {
   path = null;
   lines = [];
 
+  viewer.addEventListener('touchmove', handleDocumentMousemove,{passive: false});
+  viewer.addEventListener('touchend', handleDocumentMouseup);
+
   document.addEventListener('mousemove', handleDocumentMousemove);
   document.addEventListener('mouseup', handleDocumentMouseup);
 }
@@ -50,6 +53,9 @@ function handleDocumentMouseup(e) {
     });
   }
 
+  viewer.removeEventListener('touchmove', handleDocumentMousemove);
+  viewer.removeEventListener('touchend', handleDocumentMouseup);
+
   document.removeEventListener('mousemove', handleDocumentMousemove);
   document.removeEventListener('mouseup', handleDocumentMouseup);
 }
@@ -60,7 +66,8 @@ function handleDocumentMouseup(e) {
  * @param {Event} e The DOM event to be handled
  */
 function handleDocumentMousemove(e) {
-  savePoint(e.clientX, e.clientY);
+  e.preventDefault();
+  savePoint(e.clientX||e.targetTouches[0].clientX, e.clientY||e.targetTouches[0].clientY);
 }
 
 /**
@@ -73,6 +80,9 @@ function handleDocumentKeyup(e) {
   if (e.keyCode === 27) {
     lines = null;
     path.parentNode.removeChild(path);
+    viewer.removeEventListener('touchmove', handleDocumentMousemove);
+    viewer.removeEventListener('touchend', handleDocumentMouseup);
+
     document.removeEventListener('mousemove', handleDocumentMousemove);
     document.removeEventListener('mouseup', handleDocumentMouseup);
   }
@@ -132,6 +142,7 @@ export function enablePen() {
   if (_enabled) { return; }
 
   _enabled = true;
+  viewer.addEventListener('touchstart', handleDocumentMousedown);
   document.addEventListener('mousedown', handleDocumentMousedown);
   document.addEventListener('keyup', handleDocumentKeyup);
   disableUserSelect();
@@ -144,6 +155,8 @@ export function disablePen() {
   if (!_enabled) { return; }
 
   _enabled = false;
+
+  viewer.removeEventListener('touchstart', handleDocumentMousedown);
   document.removeEventListener('mousedown', handleDocumentMousedown);
   document.removeEventListener('keyup', handleDocumentKeyup);
   enableUserSelect();
