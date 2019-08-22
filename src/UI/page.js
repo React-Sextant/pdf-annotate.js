@@ -7,8 +7,12 @@ const PAGE_TEMPLATE = `
     <div class="canvasWrapper">
       <canvas></canvas>
     </div>
-    <svg class="annotationLayer"></svg>
-    <div class="textLayer"></div>
+    <div class="svgWrapper">
+      <div class="svgRelative">
+        <svg class="annotationLayer"></svg>
+      </div>
+        
+    </div>
   </div>
 `;
 
@@ -114,9 +118,9 @@ export function renderPage(pageNumber, renderOptions) {
 function scalePage(pageNumber, viewport, context) {
   let page = document.getElementById(`pageContainer${pageNumber}`);
   let canvas = page.querySelector('.canvasWrapper canvas');
-  let svg = page.querySelector('.annotationLayer');
+  let svgRelative = page.querySelector('.svgRelative');  //for edit
+  let svg = page.querySelector('svg.annotationLayer');
   let wrapper = page.querySelector('.canvasWrapper');
-  let textLayer = page.querySelector('.textLayer');
   let outputScale = getOutputScale(context);
   let transform = !outputScale.scaled ? null : [outputScale.sx, 0, 0, outputScale.sy, 0, 0];
   let sfx = approximateFraction(outputScale.sx);
@@ -130,14 +134,12 @@ function scalePage(pageNumber, viewport, context) {
   canvas.style.height = roundToDivide(viewport.height, sfx[1]) + 'px';
   svg.setAttribute('width', viewport.width);
   svg.setAttribute('height', viewport.height);
-  svg.style.width = `${viewport.width}px`;
-  svg.style.height = `${viewport.height}px`;
-  // page.style.width = `${viewport.width}px`;
-  // page.style.height = `${viewport.height}px`;
+  page.style.width = `100%`;
+  page.style.height = `100%`;
+  svgRelative.style.width = `${viewport.width}px`;
+  svgRelative.style.height = `${viewport.height}px`;
   wrapper.style.width = `${viewport.width}px`;
   wrapper.style.height = `${viewport.height}px`;
-  textLayer.style.width = `${viewport.width}px`;
-  textLayer.style.height = `${viewport.height}px`;
 
   return transform;
 }

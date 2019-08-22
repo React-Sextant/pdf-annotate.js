@@ -28,8 +28,9 @@ function handleDocumentMouseup(e) {
   input.style.border = `3px solid ${BORDER_COLOR}`;
   input.style.borderRadius = '3px';
   input.style.position = 'absolute';
-  input.style.top = `${e.clientY}px`;
-  input.style.left = `${e.clientX}px`;
+  input.style.zIndex = '999';
+  input.style.top = `${e.clientY||e.changedTouches[0].clientY}px`;
+  input.style.left = `${e.clientX||e.changedTouches[0].clientX}px`;
   input.style.fontSize = `${_textSize}px`;
 
   input.addEventListener('blur', handleInputBlur);
@@ -91,7 +92,7 @@ function saveText() {
         appendChild(svg, annotation);
       });
   }
-  
+
   closeInput();
 }
 
@@ -104,6 +105,7 @@ function closeInput() {
     input.removeEventListener('keyup', handleInputKeyup);
     document.body.removeChild(input);
     input = null;
+    disableText()
   }
 }
 

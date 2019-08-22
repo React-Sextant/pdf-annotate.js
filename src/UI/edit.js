@@ -20,7 +20,7 @@ import {
 let _enabled = false;
 let isDragging = false, overlay;
 let dragOffsetX, dragOffsetY, dragStartX, dragStartY;
-const OVERLAY_BORDER_SIZE = 3;
+const OVERLAY_BORDER_SIZE = 1;
 
 /**
  * Create an overlay for editing an annotation.
@@ -47,6 +47,8 @@ function createEditOverlay(target) {
   overlay.style.width = `${rect.width}px`;
   overlay.style.height = `${rect.height}px`;
   overlay.style.border = `${OVERLAY_BORDER_SIZE}px solid ${BORDER_COLOR}`;
+  overlay.style.border = `1px solid #000`;
+  overlay.style.borderStyle = `dashed`;
   overlay.style.borderRadius = `${OVERLAY_BORDER_SIZE}px`;
 
   anchor.innerHTML = '×';
@@ -70,6 +72,7 @@ function createEditOverlay(target) {
   document.addEventListener('click', handleDocumentClick);
   document.addEventListener('keyup', handleDocumentKeyup);
   document.addEventListener('mousedown', handleDocumentMousedown);
+  document.getElementById("viewer").addEventListener('touchstart', handleDocumentMousedown);
   anchor.addEventListener('click', deleteAnnotation);
   anchor.addEventListener('mouseover', () => {
     anchor.style.color = '#35A4DC';
@@ -104,9 +107,9 @@ function destroyEditOverlay() {
   document.removeEventListener('mousemove', handleDocumentMousemove);
   document.removeEventListener('mouseup', handleDocumentMouseup);
 
-  document.removeEventListener('touchstart', handleDocumentMousedown);
-  document.removeEventListener('touchmove', handleDocumentMousemove);
-  document.removeEventListener('touchend', handleDocumentMouseup);
+  document.getElementById("viewer").removeEventListener('touchstart', handleDocumentMousedown);
+  document.getElementById("viewer").removeEventListener('touchmove', handleDocumentMousemove);
+  document.getElementById("viewer").removeEventListener('touchend', handleDocumentMouseup);
 
   enableUserSelect();
 }
@@ -180,8 +183,8 @@ function handleDocumentMousedown(e) {
   if (type === 'highlight' || type === 'strikeout') { return; }
 
   isDragging = true;
-  dragOffsetX = e.clientX;
-  dragOffsetY = e.clientY;
+  dragOffsetX = e.clientX||e.changedTouches[0].clientX;
+  dragOffsetY = e.clientY||e.changedTouches[0].clientY;
   dragStartX = overlay.offsetLeft;
   dragStartY = overlay.offsetTop;
 
@@ -189,8 +192,9 @@ function handleDocumentMousedown(e) {
   overlay.style.cursor = 'move';
   overlay.querySelector('a').style.display = 'none';
 
-  document.addEventListener('touchmove', handleDocumentMousemove);
-  document.addEventListener('touchend', handleDocumentMouseup);
+  document.getElementById("content-wrapper").classList.add('swiper-no-swiping');
+  document.getElementById("viewer").addEventListener('touchmove', handleDocumentMousemove);
+  document.getElementById("viewer").addEventListener('touchend', handleDocumentMouseup);
 
   document.addEventListener('mousemove', handleDocumentMousemove);
   document.addEventListener('mouseup', handleDocumentMouseup);
@@ -203,15 +207,18 @@ function handleDocumentMousedown(e) {
  * @param {Event} e The DOM event that needs to be handled
  */
 function handleDocumentMousemove(e) {
+  e.preventDefault();
+
   let annotationId = overlay.getAttribute('data-target-id');
   let parentNode = overlay.parentNode;
   let rect = parentNode.getBoundingClientRect();
-  let y = (dragStartY + (e.clientY - dragOffsetY));
-  let x = (dragStartX + (e.clientX - dragOffsetX));
+  let y = (dragStartY + ((e.clientY||e.targetTouches[0].clientY) - dragOffsetY));
+  let x = (dragStartX + ((e.clientX||e.targetTouches[0].clientX) - dragOffsetX));
   let minY = 0;
   let maxY = rect.height;
   let minX = 0;
   let maxX = rect.width;
+
 
   if (y > minY && y + overlay.offsetHeight < maxY) {
     overlay.style.top = `${y}px`;
@@ -330,8 +337,9 @@ function handleDocumentMouseup(e) {
   overlay.style.background = '';
   overlay.style.cursor = '';
 
-  document.removeEventListener('touchmove', handleDocumentMousemove);
-  document.removeEventListener('touchend', handleDocumentMouseup);
+  document.getElementById("content-wrapper").classList.remove('swiper-no-swiping');
+  document.getElementById("viewer").removeEventListener('touchmove', handleDocumentMousemove);
+  document.getElementById("viewer").removeEventListener('touchend', handleDocumentMouseup);
 
   document.removeEventListener('mousemove', handleDocumentMousemove);
   document.removeEventListener('mouseup', handleDocumentMouseup);

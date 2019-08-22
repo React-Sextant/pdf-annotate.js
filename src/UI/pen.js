@@ -21,8 +21,8 @@ function handleDocumentMousedown() {
   path = null;
   lines = [];
 
-  viewer.addEventListener('touchmove', handleDocumentMousemove,{passive: false});
-  viewer.addEventListener('touchend', handleDocumentMouseup);
+  document.getElementById("viewer").addEventListener('touchmove', handleDocumentMousemove,{passive: false});
+  document.getElementById("viewer").addEventListener('touchend', handleDocumentMouseup,{passive: false});
 
   document.addEventListener('mousemove', handleDocumentMousemove);
   document.addEventListener('mouseup', handleDocumentMouseup);
@@ -35,7 +35,7 @@ function handleDocumentMousedown() {
  */
 function handleDocumentMouseup(e) {
   let svg;
-  if (lines.length > 1 && (svg = findSVGAtPoint(e.clientX, e.clientY))) {
+  if (lines.length > 1 && (svg = findSVGAtPoint(e.clientX||e.changedTouches[0].clientX, e.clientY||e.changedTouches[0].clientY))) {
     let { documentId, pageNumber } = getMetadata(svg);
 
     PDFJSAnnotate.getStoreAdapter().addAnnotation(documentId, pageNumber, {
@@ -53,8 +53,8 @@ function handleDocumentMouseup(e) {
     });
   }
 
-  viewer.removeEventListener('touchmove', handleDocumentMousemove);
-  viewer.removeEventListener('touchend', handleDocumentMouseup);
+  document.getElementById("viewer").removeEventListener('touchmove', handleDocumentMousemove);
+  document.getElementById("viewer").removeEventListener('touchend', handleDocumentMouseup);
 
   document.removeEventListener('mousemove', handleDocumentMousemove);
   document.removeEventListener('mouseup', handleDocumentMouseup);
@@ -80,8 +80,8 @@ function handleDocumentKeyup(e) {
   if (e.keyCode === 27) {
     lines = null;
     path.parentNode.removeChild(path);
-    viewer.removeEventListener('touchmove', handleDocumentMousemove);
-    viewer.removeEventListener('touchend', handleDocumentMouseup);
+    document.getElementById("viewer").removeEventListener('touchmove', handleDocumentMousemove);
+    document.getElementById("viewer").removeEventListener('touchend', handleDocumentMouseup);
 
     document.removeEventListener('mousemove', handleDocumentMousemove);
     document.removeEventListener('mouseup', handleDocumentMouseup);
@@ -106,7 +106,7 @@ function savePoint(x, y) {
     y: y - rect.top
   });
 
-  lines.push([point.x, point.y]);
+  lines.push([Math.round(point.x * 100000) / 100000, Math.round(point.y * 100000) / 100000]);
 
   if (lines.length <= 1) {
     return;
@@ -158,7 +158,7 @@ export function disablePen() {
   _enabled = false;
 
   document.getElementById("content-wrapper").classList.remove('swiper-no-swiping');
-  viewer.removeEventListener('touchstart', handleDocumentMousedown);
+  document.getElementById("viewer").removeEventListener('touchstart', handleDocumentMousedown);
   document.removeEventListener('mousedown', handleDocumentMousedown);
   document.removeEventListener('keyup', handleDocumentKeyup);
   enableUserSelect();
