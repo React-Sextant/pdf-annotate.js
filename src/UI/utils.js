@@ -315,7 +315,7 @@ export function getMetadata(svg) {
  * @param {Element} el like a #viewer in swiper
  * **/
 export function getTranslate(el) {
-  let results = (el.style.webkitTransform|el.style.transform).match(/^translate3d\((.*?)px.*\)$/);
+  let results = (el.style.webkitTransform||el.style.transform).match(/^translate3d\((.*?)px.*\)$/);
   if(Array.isArray(results)&&!!Number(results[1])){
     return Number(results[1])
   }

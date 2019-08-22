@@ -218,7 +218,7 @@ render();
 (function () {
   setActiveToolbarItem('cursor');
   UI.setPen(3,'#FF0000');
-  UI.setText(14);
+  UI.setText(20);
 
   function setActiveToolbarItem(type, button) {
       switch (type) {
@@ -260,6 +260,11 @@ render();
   }
 
   document.querySelector('.toolbar').addEventListener('click', handleToolbarClick);
+  document.getElementById('viewer').addEventListener('click', function(){
+    if(document.querySelector('.default-toolbar').style.display!=='none'){
+      document.querySelector('.default-toolbar').style.display='none'
+    }
+  });
 })();
 
 // // Scale/rotate

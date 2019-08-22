@@ -3,11 +3,10 @@ import renderScreenReaderHints from '../a11y/renderScreenReaderHints';
 
 // Template for creating a new page
 const PAGE_TEMPLATE = `
-  <div style="visibility: hidden;" class="page swiper-slide" data-loaded="false">
+  <div style="visibility: visible;" class="page swiper-slide" data-loaded="false">
     <div class="canvasWrapper">
       <canvas></canvas>
     </div>
-    <img src="./assets/loadingfile.png" width="100px" height="100px" style="display: block">
     <div class="svgWrapper">
       <div class="svgRelative">
         <svg class="annotationLayer"></svg>
@@ -67,6 +66,11 @@ export function renderPage(pageNumber, renderOptions) {
     let canvas = page.querySelector('.canvasWrapper canvas');
     let canvasContext = canvas.getContext('2d', {alpha: false});
     let viewport = pdfPage.getViewport(scale, rotate);
+    // let desiredWidth = screen.width;
+    // let _viewport = pdfPage.getViewport({ scale: 1, });
+    // let scale = desiredWidth / _viewport.width;
+    // let viewport = pdfPage.getViewport({ scale: scale, });
+
     let transform = scalePage(pageNumber, viewport, canvasContext);
 
     page.setAttribute('data-loaded', 'true');

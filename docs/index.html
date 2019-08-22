@@ -10,7 +10,6 @@
       margin: 0;
     }
     .pdfViewer .canvasWrapper {
-      box-shadow: 0 0 3px #bbb;
       margin:0 auto;
     }
     .svgWrapper {
@@ -32,6 +31,7 @@
       right: 0;
       bottom: 0;
       overflow: auto;
+      overflow-x: hidden;
     }
     .pdfViewer .page {
       margin:30px auto !important;
@@ -39,7 +39,7 @@
       -webkit-border-image: none !important;
       -o-border-image: none !important;
       border-image: none !important;
-      background: #eee !important;
+      background: url("./assets/loadingfile.png") no-repeat center !important;;
     }
 
 
@@ -149,7 +149,8 @@
   <script src="https://cdn.bootcss.com/pdf.js/2.2.228/pdf.worker.min.js"></script>
   <script src="https://cdn.bootcss.com/pdf.js/2.2.228/pdf.min.js"></script>
   <script src="https://cdn.bootcss.com/pdf.js/2.2.228/pdf_viewer.js"></script>
-  <script src="http://192.168.0.102:8080/index.js"></script>
+<!--  <script src="index.js"></script>-->
+  <script src="http://192.168.1.105:8080/index.js"></script>
 
 </body>
 </html>
