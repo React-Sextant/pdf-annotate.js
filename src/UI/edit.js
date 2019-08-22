@@ -47,7 +47,7 @@ function createEditOverlay(target) {
   overlay.style.width = `${rect.width}px`;
   overlay.style.height = `${rect.height}px`;
   overlay.style.border = `${OVERLAY_BORDER_SIZE}px solid ${BORDER_COLOR}`;
-  overlay.style.border = `1px solid #000`;
+  overlay.style.border = `2px solid #f00`;
   overlay.style.borderStyle = `dashed`;
   overlay.style.borderRadius = `${OVERLAY_BORDER_SIZE}px`;
 

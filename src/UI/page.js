@@ -7,6 +7,7 @@ const PAGE_TEMPLATE = `
     <div class="canvasWrapper">
       <canvas></canvas>
     </div>
+    <img src="./assets/loadingfile.png" width="100px" height="100px" style="display: block">
     <div class="svgWrapper">
       <div class="svgRelative">
         <svg class="annotationLayer"></svg>

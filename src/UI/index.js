@@ -5,6 +5,7 @@ import { disablePoint, enablePoint } from './point';
 import { disableRect, enableRect } from './rect';
 import { disableText, enableText, setText } from './text';
 import { createPage, renderPage } from './page';
+import { getTranslate } from './utils';
 
 export default {
   addEventListener, removeEventListener, fireEvent,
@@ -13,5 +14,6 @@ export default {
   disablePoint, enablePoint,
   disableRect, enableRect,
   disableText, enableText, setText,
-  createPage, renderPage
+  createPage, renderPage,
+  getTranslate
 };

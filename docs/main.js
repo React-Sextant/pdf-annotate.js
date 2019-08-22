@@ -1,6 +1,4 @@
-import twitter from 'twitter-text';
 import PDFJSAnnotate from '../index';
-import initColorPicker from './shared/initColorPicker';
 
 const { UI } = PDFJSAnnotate;
 const documentId = 'example.pdf';
@@ -11,6 +9,7 @@ let RENDER_OPTIONS = {
   scale: parseFloat(localStorage.getItem(`${documentId}/scale`), 10) || 1.33,
   rotate: parseInt(localStorage.getItem(`${documentId}/rotate`), 10) || 0
 };
+let SWIPER_SCALE;
 
 PDFJSAnnotate.setStoreAdapter(new PDFJSAnnotate.LocalStoreAdapter());
 pdfjsLib.workerSrc = './shared/pdf.worker.js';
@@ -47,8 +46,34 @@ function render() {
           let visiblePage = document.querySelector(`.page[data-page-number="${visiblePageNum}"][data-loaded="false"]`);
           if (visiblePage) {
             setTimeout(function () {
-              UI.renderPage(visiblePageNum, RENDER_OPTIONS).then(res=>{})
+              UI.renderPage(visiblePageNum, RENDER_OPTIONS).then(res=>{
+                //及时修正swiper错位问题
+                if(!SWIPER_SCALE){
+                  SWIPER_SCALE = UI.getTranslate(document.getElementById('viewer'));
+                }else if(UI.getTranslate(document.getElementById('viewer'))%SWIPER_SCALE !== 0){
+                  document.getElementById('viewer').style.webkitTransform = `translate3d(${this.activeIndex*SWIPER_SCALE}px, 0px, 0px)`;
+                  document.getElementById('viewer').style.transform = `translate3d(${this.activeIndex*SWIPER_SCALE}px, 0px, 0px)`
+                }
+
+                //及时收回内存
+                if(visiblePageNum>3){
+                  canvasDestory(visiblePageNum-3);
+                }
+              })
             });
+          }else if(document.querySelector(`.page[data-page-number="${visiblePageNum+3}"][data-loaded="true"]`)){
+            canvasDestory(visiblePageNum+3);
+          }
+
+          /**
+           * 释放canvas内存
+           *
+           * 删除当前页之前第{page张和之后第{page}张内存（暂定为3）
+           * **/
+          function canvasDestory(page){
+            let _canvas = document.getElementById(`pageContainer${page}`).children[0].children[0];
+            _canvas.getContext('2d').clearRect(0,0,_canvas.width,_canvas.height);
+            document.getElementById(`pageContainer${page}`).dataset.loaded = "false"
           }
         },
       },
@@ -294,30 +319,3 @@ render();
 document.getElementById('pdf-point').addEventListener('click',function(){
   document.querySelector('.default-toolbar').style.display = '';
 });
-
-// //开始画批注
-// document.getElementById('pdf-annotation').addEventListener('click',function(){
-//   UI.enablePen();
-//   document.querySelector('.pdf-toolbar').style.display = 'none';
-//   document.querySelector('.pdf-toolbar-confirm').style.display = ''
-// });
-//
-// //开始文本批注
-// document.getElementById('pdf-writetext').addEventListener('click',function(){
-//   alert(1)
-//
-// });
-//
-// //批注确认框
-// document.getElementById('pdf-confirm-submit').addEventListener('click',function(){
-//   UI.disablePen();
-//   UI.enableEdit();
-//   document.querySelector('.pdf-toolbar-confirm').style.display = 'none';
-// });
-//
-// //取消批注
-// document.getElementById('pdf-confirm-cancel').addEventListener('click',function(){
-//   UI.disablePen();
-//   UI.enableEdit();
-//   document.querySelector('.pdf-toolbar-confirm').style.display = 'none';
-// });

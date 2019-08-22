@@ -70,7 +70,7 @@ export function findAnnotationAtPoint(x, y) {
   // Find a target element within SVG
   for (let i=0, l=elements.length; i<l; i++) {
     let el = elements[i];
-    if (pointIntersectsRect(x, y, getOffsetAnnotationRect(el))) {   
+    if (pointIntersectsRect(x, y, getOffsetAnnotationRect(el))) {
       return el;
     }
   }
@@ -307,4 +307,16 @@ export function getMetadata(svg) {
     pageNumber: parseInt(svg.getAttribute('data-pdf-annotate-page'), 10),
     viewport: JSON.parse(svg.getAttribute('data-pdf-annotate-viewport'))
   };
+}
+
+/**
+ * Get translate3d values of a div
+ *
+ * @param {Element} el like a #viewer in swiper
+ * **/
+export function getTranslate(el) {
+  let results = (el.style.webkitTransform|el.style.transform).match(/^translate3d\((.*?)px.*\)$/);
+  if(Array.isArray(results)&&!!Number(results[1])){
+    return Number(results[1])
+  }
 }
