@@ -8,8 +8,27 @@
       background-color: #eee;
       font-family: sans-serif;
       margin: 0;
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      display:flex;
+      display: -webkit-flex;
+      align-items:center;
     }
-    .pdfViewer .canvasWrapper {
+    #content-wrapper {
+      overflow: auto;
+      overflow-x: hidden;
+      flex:1;
+    }
+    .page{
+      display: flex;
+      align-self: center;
+      background: url("./assets/loadingfile.png") no-repeat center;
+    }
+    /*appendChild*/
+    .canvasWrapper {
       margin:0 auto;
     }
     .svgWrapper {
@@ -24,22 +43,14 @@
       display: block;
       margin:0 auto;
     }
-    #content-wrapper {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      overflow: auto;
-      overflow-x: hidden;
-    }
+
+    /*hack pdf_viewer.css*/
     .pdfViewer .page {
       margin:30px auto !important;
       border: none !important;
       -webkit-border-image: none !important;
       -o-border-image: none !important;
       border-image: none !important;
-      background: url("./assets/loadingfile.png") no-repeat center !important;;
     }
 
 
@@ -47,10 +58,6 @@
 
     .default-toolbar,.draw-confirm{
       background: #000000;
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
       padding: 15px;
       z-index: 100;
       display: flex;
@@ -110,17 +117,28 @@
     .draw-confirm-button button:active{
       background: #AAAAAA;
     }
+
+    .toggle-toolbar{
+      position: absolute;
+      width:100%;
+      height:100px;
+      z-index: 9999;
+      left:0
+    }
+
+    .toggle-toolbar-top{
+      top:0;
+    }
+    .toggle-toolbar-bottom{
+      bottom:0;
+    }
   </style>
 </head>
 <body>
-<!--  </div>-->
-  <div id="content-wrapper" class="swiper-container">
-    <div id="viewer" class="pdfViewer swiper-wrapper"></div>
-  </div>
+<div id="content-wrapper" class="swiper-container">
+  <div id="viewer" class="swiper-wrapper"></div>
 
   <div class="toolbar">
-    <!--橘色按钮-->
-    <div id="pdf-point">批注</div>
     <!--  底部toolbar-->
     <div class="default-toolbar" style="display: none">
       <button type="button" title="Pen Tool" data-tooltype="draw">
@@ -130,7 +148,6 @@
         <img src="./assets/writetext.png" alt="文本" data-tooltype="text">
       </button>
     </div>
-
     <!--批注确认框-->
     <div class="draw-confirm" style="display: none">
       <h1 style="text-align: center;color:#FFFFFF">是否生成批注？</h1>
@@ -140,6 +157,15 @@
       </div>
     </div>
   </div>
+</div>
+<!--顶部浮动工具栏-->
+<div class="toggle-toolbar toggle-toolbar-top">
+</div>
+<!--底部浮动工具栏-->
+<div class="toggle-toolbar toggle-toolbar-bottom">
+</div>
+<!--橘色按钮-->
+<div id="pdf-point">批注</div>
   <!--  <script src="https://cdn.bootcss.com/vConsole/2.5.2/vconsole.min.js"></script>-->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.2.228/pdf_viewer.css" integrity="sha256-kL2OHdmSAnGvE1fC/8DCaB/0yvHkLP1u538UiQ5Rgy8=" crossorigin="anonymous" />
   <link href="https://cdn.bootcss.com/Swiper/4.5.0/css/swiper.min.css" rel="stylesheet">
@@ -150,7 +176,7 @@
   <script src="https://cdn.bootcss.com/pdf.js/2.2.228/pdf.min.js"></script>
   <script src="https://cdn.bootcss.com/pdf.js/2.2.228/pdf_viewer.js"></script>
 <!--  <script src="index.js"></script>-->
-  <script src="http://192.168.1.105:8080/index.js"></script>
+  <script src="http://192.168.1.104:8080/index.js"></script>
 
 </body>
 </html>

@@ -61,7 +61,7 @@ function handleDocumentMousedown(e) {
   overlay.style.borderRadius = '3px';
   svg.parentNode.appendChild(overlay);
 
-  viewer.addEventListener('touchmove', handleDocumentMousemove);
+  document.getElementById('viewer').addEventListener('touchmove', handleDocumentMousemove);
   document.addEventListener('mousemove', handleDocumentMousemove);
   disableUserSelect();
 }
@@ -114,7 +114,7 @@ function handleDocumentMouseup(e) {
     overlay.parentNode.removeChild(overlay);
     overlay = null;
 
-    viewer.removeEventListener('touchmove', handleDocumentMousemove);
+    document.getElementById('viewer').removeEventListener('touchmove', handleDocumentMousemove);
     document.removeEventListener('mousemove', handleDocumentMousemove);
     enableUserSelect();
   }
@@ -133,7 +133,7 @@ function handleDocumentKeyup(e) {
     if (overlay && overlay.parentNode) {
       overlay.parentNode.removeChild(overlay);
       overlay = null;
-        viewer.removeEventListener('touchmove', handleDocumentMousemove);
+      document.getElementById('viewer').removeEventListener('touchmove', handleDocumentMousemove);
       document.removeEventListener('mousemove', handleDocumentMousemove);
     }
   }

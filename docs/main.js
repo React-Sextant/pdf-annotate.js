@@ -30,12 +30,11 @@ function render() {
   pdfjsLib.getDocument(RENDER_OPTIONS.documentId).then((pdf) => {
     RENDER_OPTIONS.pdfDocument = pdf;
 
-    let viewer = document.getElementById('viewer');
-    viewer.innerHTML = '';
+    document.getElementById('viewer').innerHTML = '';
     NUM_PAGES = pdf._pdfInfo.numPages;
     for (let i=0; i<NUM_PAGES; i++) {
       let page = UI.createPage(i+1);
-      viewer.appendChild(page);
+      document.getElementById('viewer').appendChild(page);
     }
 
     new Swiper ('.swiper-container', {

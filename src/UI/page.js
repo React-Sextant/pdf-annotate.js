@@ -3,7 +3,7 @@ import renderScreenReaderHints from '../a11y/renderScreenReaderHints';
 
 // Template for creating a new page
 const PAGE_TEMPLATE = `
-  <div style="visibility: visible;" class="page swiper-slide" data-loaded="false">
+  <div class="page swiper-slide" data-loaded="false">
     <div class="canvasWrapper">
       <canvas></canvas>
     </div>
@@ -65,11 +65,12 @@ export function renderPage(pageNumber, renderOptions) {
     let svg = page.querySelector('.annotationLayer');
     let canvas = page.querySelector('.canvasWrapper canvas');
     let canvasContext = canvas.getContext('2d', {alpha: false});
-    let viewport = pdfPage.getViewport(scale, rotate);
-    // let desiredWidth = screen.width;
-    // let _viewport = pdfPage.getViewport({ scale: 1, });
-    // let scale = desiredWidth / _viewport.width;
-    // let viewport = pdfPage.getViewport({ scale: scale, });
+    // let viewport = pdfPage.getViewport(scale, rotate);
+    //only mobile H5
+    let desiredWidth = window.innerWidth  || document.body.clientWidth;
+    let _viewport = pdfPage.getViewport({ scale: 1, });
+    let _scale = (desiredWidth*0.99) / _viewport.width;
+    let viewport = pdfPage.getViewport({ scale: _scale, });
 
     let transform = scalePage(pageNumber, viewport, canvasContext);
 
@@ -132,15 +133,15 @@ function scalePage(pageNumber, viewport, context) {
   let sfy = approximateFraction(outputScale.sy);
 
   // Adjust width/height for scale
-  page.style.visibility = '';
+  // page.style.visibility = '';
   canvas.width = roundToDivide(viewport.width * outputScale.sx, sfx[0]);
   canvas.height = roundToDivide(viewport.height * outputScale.sy, sfy[0]);
   canvas.style.width = roundToDivide(viewport.width, sfx[1]) + 'px';
   canvas.style.height = roundToDivide(viewport.height, sfx[1]) + 'px';
   svg.setAttribute('width', viewport.width);
   svg.setAttribute('height', viewport.height);
-  page.style.width = `100%`;
-  page.style.height = `100%`;
+  // page.style.width = `100%`;
+  // page.style.height = `100%`;
   svgRelative.style.width = `${viewport.width}px`;
   svgRelative.style.height = `${viewport.height}px`;
   wrapper.style.width = `${viewport.width}px`;

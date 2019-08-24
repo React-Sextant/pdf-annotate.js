@@ -69,6 +69,8 @@ function createEditOverlay(target) {
 
   overlay.appendChild(anchor);
   parentNode.appendChild(overlay);
+
+  document.getElementById("content-wrapper").classList.add('swiper-no-swiping');
   document.addEventListener('click', handleDocumentClick);
   document.addEventListener('keyup', handleDocumentKeyup);
   document.addEventListener('mousedown', handleDocumentMousedown);
@@ -107,6 +109,7 @@ function destroyEditOverlay() {
   document.removeEventListener('mousemove', handleDocumentMousemove);
   document.removeEventListener('mouseup', handleDocumentMouseup);
 
+  document.getElementById("content-wrapper").classList.remove('swiper-no-swiping');
   document.getElementById("viewer").removeEventListener('touchstart', handleDocumentMousedown);
   document.getElementById("viewer").removeEventListener('touchmove', handleDocumentMousemove);
   document.getElementById("viewer").removeEventListener('touchend', handleDocumentMouseup);
